@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+    <button type="submit" onclick="UserAction()">GET</button>
+    <br><br>
+    <table id="myTableData" border="1" cellpadding="2">
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>DNS/Server</th>
+                <th>Status</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+    </table>
+</body>
+
+<script>
+    function eyeiconclick() {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                var j = JSON.parse(this.responseText);
+                if (j.status == "success") {
+                    window.alert(this.responseText);
+                } else {
+                    window.alert("Erorr 400\n bad request ");
+                }
+            }
+        };
+        xhttp.open("POST", "http://144.126.252.111:5139", true);
+        xhttp.setRequestHeader("Content-type", "text/plain");
+        xhttp.send(oXHR);
+    }
+
+    function UserAction() {
+
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+
+                var obj = JSON.parse(this.responseText);
+                var table = document.getElementById("myTableData");
+
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+
+
+                if (obj.status == "success") {
+                    row.insertCell(0).innerHTML = new Date();
+                    row.insertCell(1).innerHTML = "144.126.252.111";
+                    row.insertCell(2).innerHTML = obj.status.fontcolor("green");
+                    row.insertCell(3).innerHTML = '<button onclick="eyeiconclick()"><i class = "fa fa-eye"></i></button>';
+                } else {
+                    row.insertCell(0).innerHTML = new Date();
+                    row.insertCell(1).innerHTML = "144.126.252.111";
+                    row.insertCell(2).innerHTML = "down".fontcolor("red");
+                    row.insertCell(3).innerHTML = '<button onclick="eyeiconclick()"><i class = "fa fa-eye"></i></button>';
+                }
+            }
+        };
+        xhttp.open("POST", "http://144.126.252.111:5139", true);
+        xhttp.setRequestHeader("Content-type", "text/plain");
+        xhttp.send(oXHR);
+    }
+    var oXHR = new XMLHttpRequest();
+
+    // Initiate request.
+    oXHR.onreadystatechange = reportStatus;
+    oXHR.open("GET", "Test_NRM_Packet.postman_collection.json", true); // get json file.
+    oXHR.send();
+
+    function reportStatus() {
+        if (oXHR.readyState == 4) { // Check if request is complete.
+
+        }
+        var obj = JSON.parse(this.responseText);
+        var raw1 = obj["item"][0]["request"]["body"]["raw1"];
+        var time = Date.now();
+        var raw2 = obj["item"][0]["request"]["body"]["raw2"];
+        var final = raw1.concat(time, raw2);
+    }
+    setInterval(UserAction, 5000);
+</script>
+
+</html>
