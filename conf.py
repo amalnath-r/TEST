@@ -1,6 +1,6 @@
 version: 2
 
-sphinx:
-  builder: html
-  configuration: conf.py
-  fail_on_warning: true
+python:
+  install:
+    - requirements: docs/requirements.txt
+    - requirements: requirements.txt
